@@ -181,7 +181,9 @@ class RunException(Exception):
 
 def compile(code_dir, verbose=False):
     cwd = os.getcwd()
-    cmd = 'cd {} && RUSTFLAGS="-Awarnings" cargo build'.format(code_dir)
+    old_rustflags = os.environ.get('RUSTFLAGS', '')
+    complete_flags = f"{old_rustflags} -Awarnings".strip()
+    cmd = 'cd {} && RUSTFLAGS="{}" cargo build'.format(code_dir, complete_flags)
 
     try:
         result = subprocess.run(
